@@ -24,13 +24,13 @@
  */
 package au.com.centrumsystems.hudson.plugin.util;
 
-import hudson.model.Action;
-import hudson.model.ParameterValue;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Action;
 import hudson.model.Cause;
 import hudson.model.Cause.UpstreamCause;
 import hudson.model.CauseAction;
+import hudson.model.ParameterValue;
 import hudson.model.ParametersAction;
 
 import java.util.LinkedHashMap;
@@ -91,30 +91,9 @@ public final class BuildUtil {
         final ParametersAction dsProjectParametersAction = ProjectUtil.getProjectParametersAction(downstreamProject);
 
         // Retrieve the List of Actions from the upstream build
-        final ParametersAction usBuildParametersAction = BuildUtil.getBuildParametersAction(upstreamBuild);
+        final ParametersAction usBuildParametersAction = upstreamBuild.getAction(ParametersAction.class);
 
         return mergeParameters(usBuildParametersAction, dsProjectParametersAction);
-    }
-
-    /**
-     * Gets the ParametersAction of an AbstractBuild
-     * 
-     * @param build
-     *            - AbstractBuild
-     * @return - ParametersAction of AbstractBuild
-     */
-    public static ParametersAction getBuildParametersAction(final AbstractBuild<?, ?> build) {
-        ParametersAction buildParametersAction = null;
-        if (build != null) {
-            // If a ParametersAction is found
-            for (final Action nextAction : build.getActions()) {
-                if (nextAction instanceof ParametersAction) {
-                    buildParametersAction = (ParametersAction) nextAction;
-                }
-            }
-        }
-
-        return buildParametersAction;
     }
 
     /**
