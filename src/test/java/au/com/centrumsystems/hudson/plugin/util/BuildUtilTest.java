@@ -125,25 +125,4 @@ public class BuildUtilTest extends HudsonTestCase {
         assertEquals(((StringParameterValue) params.getParameter(key1)).value, value2);
         assertEquals(((StringParameterValue) params.getParameter(key2)).value, value3);
     }
-
-    @Test
-    public void testMergeParameters() throws Exception {
-        final String key1 = "testKey";
-        final String key2 = "testKey2";
-        final String value1 = "testValue";
-        final String value2 = "testValue2";
-        final String value3 = "testValue3";
-
-        ParametersAction baseParams = new ParametersAction(new StringParameterValue(key1, value1), new StringParameterValue(key2, value3));
-        ParametersAction extraParams = new ParametersAction(new StringParameterValue(key2, value2));
-
-        ParametersAction params = BuildUtil.mergeParameters(baseParams, extraParams);
-        assertEquals(((StringParameterValue) params.getParameter(key1)).value, value1);
-        assertEquals(((StringParameterValue) params.getParameter(key2)).value, value2);
-
-        baseParams = null;
-        extraParams = null;
-        params = BuildUtil.mergeParameters(baseParams, extraParams);
-        assertEquals(params.getParameters().size(), 0);
-    }
 }

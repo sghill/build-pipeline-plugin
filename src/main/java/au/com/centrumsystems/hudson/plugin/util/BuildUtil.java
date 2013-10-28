@@ -30,10 +30,8 @@ import hudson.model.Action;
 import hudson.model.Cause;
 import hudson.model.Cause.UpstreamCause;
 import hudson.model.CauseAction;
-import hudson.model.ParameterValue;
 import hudson.model.ParametersAction;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -93,33 +91,8 @@ public final class BuildUtil {
         // Retrieve the List of Actions from the upstream build
         final ParametersAction usBuildParametersAction = upstreamBuild.getAction(ParametersAction.class);
 
-        return mergeParameters(usBuildParametersAction, dsProjectParametersAction);
+        // TODO: when https://github.com/jenkinsci/jenkins/pull/976 has been released, this can
+        // be changed to the nicer return usBuildParametersAction.merge(dsProjectParametersAction);
+        return usBuildParametersAction.createUpdated(dsProjectParametersAction.getParameters());
     }
-
-    /**
-     * Merges two sets of ParametersAction
-     * 
-     * @param base
-     *            ParametersAction set 1
-     * @param overlay
-     *            ParametersAction set 2
-     * @return - Single set of ParametersAction
-     */
-    public static ParametersAction mergeParameters(final ParametersAction base, final ParametersAction overlay) {
-        final LinkedHashMap<String, ParameterValue> params = new LinkedHashMap<String, ParameterValue>();
-        if (base != null) {
-            for (final ParameterValue param : base.getParameters()) {
-                params.put(param.getName(), param);
-            }
-        }
-
-        if (overlay != null) {
-            for (final ParameterValue param : overlay.getParameters()) {
-                params.put(param.getName(), param);
-            }
-        }
-
-        return new ParametersAction(params.values().toArray(new ParameterValue[params.size()]));
-    }
-
 }
